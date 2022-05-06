@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+
+<include file="$(find controller)/launch/move_base.launch">
+    </include>
+    
+    <include file="$(find quad_dpt_lsr)/launch/dpt_to_lsr.launch">
+    </include>
+    
+    <include file="$(find frontier_exploration)/launch/explore_costmap.launch">
+    </include>
+    
+    <include file="$(find controller)/launch/detect.launch">
+    </include>
+
+    <node name="avoid" pkg="controller" type="avoid.py" output="screen">
+    </node>
+
+    <node name="tag_feedback" pkg="controller" type="ar_fb.py" output="screen">
+    </node>
+    
+</launch>
