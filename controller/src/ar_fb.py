@@ -4,9 +4,12 @@
 """
 
 import rospy
+import cv2 as cv
+from cv_bridge import CvBridge
 from ar_track_alvar_msgs.msg import AlvarMarkers
 from geometry_msgs.msg import PoseStamped, Point
 from std_msgs.msg import Float32, Bool
+from sensor_msgs.msg import Image
 
 rateHz = 1
 start_flag = False
@@ -19,6 +22,11 @@ def start_callback(flag):
 def pose_callback(pose):
     global dronePos
     dronePos = pose
+
+def image_callback(image_message):
+    global cv_image
+    bridge = CvBridge()
+    cv_image = bridge.imgmsg_to_cv2(image_message, desired_encoding='bgr8')
 
 def callback(data):
     try:
@@ -33,21 +41,31 @@ def callback(data):
         rospy.wait_for_message("/ar_pose_marker", PoseStamped)
 
 def throw_ball(ar_tag_pose):
-    global ballRelease, pub, ar_pose_pub,dronePos, counter
+    global ballRelease, pub, ar_pose_pub, ar_image_pub,dronePos, counter, cv_image
     ar_tag_pose_point = Point()
     ar_tag_pose_point.x = ar_tag_pose.markers[0].pose.pose.position.x
     ar_tag_pose_point.y = ar_tag_pose.markers[0].pose.pose.position.y
     ar_tag_pose_point.z = ar_tag_pose.markers[0].pose.pose.position.z
     ar_pose_pub.publish(ar_tag_pose_point)
+    cv_image2 = cv_image.copy()
+    text = "x:" + str(ar_tag_pose_point.x) + " y:" + str(ar_tag_pose_point.y) + " z:" + str(ar_tag_pose_point.z)
+    cv.putText(cv_image2, text,(10,50), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 2, cv.LINE_AA)
+    cv.imwrite('./tag_image.jpg', cv_image2)
+    #cv.imshow('test',cv_image2)
+    #cv.waitKey(1)
+    #rospy.sleep(20)
+    bridge = CvBridge()
+    image_message = bridge.cv2_to_imgmsg(cv_image2, encoding="bgr8")
+    ar_image_pub.publish(image_message)
     pose = PoseStamped()
-    pose.pose.position.x = ar_tag_pose.markers[0].pose.pose.position.x + (((ar_tag_pose.markers[0].pose.pose.position.y/abs(ar_tag_pose.markers[0].pose.pose.position.y))  * 0.3) if counter>=2 and counter<7 else 0)
-    pose.pose.position.y = ar_tag_pose.markers[0].pose.pose.position.y + (((ar_tag_pose.markers[0].pose.pose.position.y/abs(ar_tag_pose.markers[0].pose.pose.position.y))  * 0.3) if counter>=1 or counter>=7 else 0)
-    pose.pose.position.z = ar_tag_pose.markers[0].pose.pose.position.z + 2.0
+    pose.pose.position.x = ar_tag_pose.markers[0].pose.pose.position.x + (((ar_tag_pose.markers[0].pose.pose.position.y/abs(ar_tag_pose.markers[0].pose.pose.position.y))  * 0.8) if counter>=2 and counter<7 else 0)
+    pose.pose.position.y = ar_tag_pose.markers[0].pose.pose.position.y + (((ar_tag_pose.markers[0].pose.pose.position.y/abs(ar_tag_pose.markers[0].pose.pose.position.y))  * 0.8) if counter>=1 or counter>=7 else 0)
+    pose.pose.position.z = ar_tag_pose.markers[0].pose.pose.position.z + 2.5
     pose.pose.orientation.w = dronePos.pose.orientation.w
     pose.pose.orientation.z = dronePos.pose.orientation.z
     print(pose)
     pub.publish(pose)
-    rospy.sleep(2.0)
+    rospy.sleep(2.5)
     ballRelease.publish(0.0)
     rospy.sleep(1)
     print("KIOS UCY DONE!!!")
@@ -55,13 +73,15 @@ def throw_ball(ar_tag_pose):
 
 
 def listener():
-    global start_flag,rateHz,dronePos, ballRelease, pub, ar_pose_pub,counter
+    global start_flag,rateHz,dronePos, ballRelease, pub, ar_pose_pub, ar_image_pub,counter
     rospy.init_node('listener', anonymous=True)
     #rospy.Subscriber("ar_pose_marker", AlvarMarkers, callback)
     pub = rospy.Publisher('/red/tracker/input_pose', PoseStamped, queue_size=10)
     rospy.Subscriber("/red/avoider/done", Bool, start_callback)
-    ballRelease = rospy.Publisher('/red/ball/magnet/gain', Float32, queue_size=10)
+    rospy.Subscriber("/red/camera/color/image_raw", Image, image_callback)
+    ballRelease = rospy.Publisher('/red/uav_magnet/gain', Float32, queue_size=10)
     ar_pose_pub = rospy.Publisher('/red/tag_position_reconstructed', Point, queue_size=10)
+    ar_image_pub = rospy.Publisher('/red/tag_image_annotated', Image, queue_size=10)
     rospy.Subscriber("/red/pose", PoseStamped, pose_callback)
     rate = rospy.Rate(rateHz)  # 10Hz
 
