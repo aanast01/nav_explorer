@@ -141,7 +141,7 @@ def listener():
                 elif counter==3:
                     pose = PoseStamped()
                     pose.pose.position.x = dronePos.pose.position.x 
-                    pose.pose.position.y = 2.0
+                    pose.pose.position.y =  dronePos.pose.position.y - 2.5
                     pose.pose.position.z = dronePos.pose.position.z
                     pose.pose.orientation.w = dronePos.pose.orientation.w
                     pose.pose.orientation.z = dronePos.pose.orientation.z
@@ -152,7 +152,7 @@ def listener():
                 elif counter==4:
                     pose = PoseStamped()
                     pose.pose.position.x = dronePos.pose.position.x 
-                    pose.pose.position.y = 0.0
+                    pose.pose.position.y = dronePos.pose.position.y - 2.5
                     pose.pose.position.z = dronePos.pose.position.z
                     pose.pose.orientation.w = dronePos.pose.orientation.w
                     pose.pose.orientation.z = dronePos.pose.orientation.z
@@ -163,7 +163,7 @@ def listener():
                 elif counter==5:
                     pose = PoseStamped()
                     pose.pose.position.x = dronePos.pose.position.x 
-                    pose.pose.position.y = -2.0
+                    pose.pose.position.y =  dronePos.pose.position.y - 2.5
                     pose.pose.position.z = dronePos.pose.position.z
                     pose.pose.orientation.w = dronePos.pose.orientation.w
                     pose.pose.orientation.z = dronePos.pose.orientation.z
@@ -174,7 +174,7 @@ def listener():
                 elif counter==6:
                     pose = PoseStamped()
                     pose.pose.position.x = dronePos.pose.position.x 
-                    pose.pose.position.y = -4.0
+                    pose.pose.position.y = dronePos.pose.position.y - 2.5
                     pose.pose.position.z = dronePos.pose.position.z
                     pose.pose.orientation.w = dronePos.pose.orientation.w
                     pose.pose.orientation.z = dronePos.pose.orientation.z
