@@ -14,7 +14,7 @@ class Avoider():
 
 	def __init__(self, vel_obj, obstacle_threshold=1.85, 
 				       regional_angle=30, normal_lin_vel=40.9, 
-				       trans_lin_vel=12.0, trans_ang_vel=0.0):
+				       trans_lin_vel=6.0, trans_ang_vel=0.0):
 		'''
 		:param vel_obj           : Velocity object; will contain velocity commands(data); Twist()
 		:param obstacle_threshold: Objects at this distance or below are considered obstacles
