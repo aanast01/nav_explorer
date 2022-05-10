@@ -13,6 +13,7 @@ from sensor_msgs.msg import Image
 
 rateHz = 1
 start_flag = False
+pose_start_flag = False
 dronePose = PoseStamped()
 
 def start_callback(flag):
@@ -20,8 +21,10 @@ def start_callback(flag):
     start_flag = flag.data
 
 def pose_callback(pose):
-    global dronePos
+    global dronePos, pose_start_flag
     dronePos = pose
+    if pose.pose.position.y >= 4.8:
+        pose_start_flag=True
 
 def image_callback(image_message):
     global cv_image
@@ -58,8 +61,8 @@ def throw_ball(ar_tag_pose):
     image_message = bridge.cv2_to_imgmsg(cv_image2, encoding="bgr8")
     ar_image_pub.publish(image_message)
     pose = PoseStamped()
-    pose.pose.position.x = ar_tag_pose.markers[0].pose.pose.position.x + (((ar_tag_pose.markers[0].pose.pose.position.y/abs(ar_tag_pose.markers[0].pose.pose.position.y))  * 0.8) if counter>=2 and counter<7 else 0)
-    pose.pose.position.y = ar_tag_pose.markers[0].pose.pose.position.y + (((ar_tag_pose.markers[0].pose.pose.position.y/abs(ar_tag_pose.markers[0].pose.pose.position.y))  * 0.8) if counter>=1 or counter>=7 else 0)
+    pose.pose.position.x = ar_tag_pose.markers[0].pose.pose.position.x + (1.2 if counter>=2 and counter<7 else 0)
+    pose.pose.position.y = ar_tag_pose.markers[0].pose.pose.position.y + (((ar_tag_pose.markers[0].pose.pose.position.y/abs(ar_tag_pose.markers[0].pose.pose.position.y))  * 1.2) if counter<=1 or counter>=7 else 0)
     pose.pose.position.z = ar_tag_pose.markers[0].pose.pose.position.z + 2.5
     pose.pose.orientation.w = dronePos.pose.orientation.w
     pose.pose.orientation.z = dronePos.pose.orientation.z
@@ -73,7 +76,7 @@ def throw_ball(ar_tag_pose):
 
 
 def listener():
-    global start_flag,rateHz,dronePos, ballRelease, pub, ar_pose_pub, ar_image_pub,counter
+    global start_flag,rateHz,dronePos, ballRelease, pub, ar_pose_pub, ar_image_pub,counter,pose_start_flag
     rospy.init_node('listener', anonymous=True)
     #rospy.Subscriber("ar_pose_marker", AlvarMarkers, callback)
     pub = rospy.Publisher('/red/tracker/input_pose', PoseStamped, queue_size=10)
@@ -94,8 +97,8 @@ def listener():
     while True:
         try:
             print('WAITING FOR AR TAG POSE')
-            if counter==1:
-                rospy.sleep(5)
+            while not pose_start_flag:
+                rate.sleep()
             ar_tag_pose = rospy.wait_for_message("/ar_pose_marker", AlvarMarkers)
             ar_tag_pose2 = rospy.wait_for_message("/ar_pose_marker", AlvarMarkers)
             if len(ar_tag_pose.markers)>0:
