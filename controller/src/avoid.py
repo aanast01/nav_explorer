@@ -96,8 +96,8 @@ def main():
                 data.pose.position.x = dronePos.pose.position.x + 2.0
                 data.pose.position.y = 5.0
                 data.pose.position.z = 2.5  # dronePos.pose.position.z
-                data.pose.orientation.w = 1.0#1.5687525
-                data.pose.orientation.z = 1.0#1.5687525
+                data.pose.orientation.w = 1.57079632679
+                data.pose.orientation.z = 1.57079632679
                 pub.publish(data)
                 rospy.sleep(3)
                 avoider_pub.publish(True)
