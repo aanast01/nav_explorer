@@ -187,8 +187,8 @@ def listener():
                     pose.pose.position.x = dronePos.pose.position.x
                     pose.pose.position.y = dronePos.pose.position.y
                     pose.pose.position.z = dronePos.pose.position.z
-                    pose.pose.orientation.w = 1.0
-                    pose.pose.orientation.z = -1.0
+                    pose.pose.orientation.w = 1.57079632679
+                    pose.pose.orientation.z = -1.57079632679
                     pub.publish(pose)
                     print('CHANGING POSITION')
                     rospy.sleep(3)
