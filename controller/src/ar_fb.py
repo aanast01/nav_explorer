@@ -61,14 +61,14 @@ def throw_ball(ar_tag_pose):
     image_message = bridge.cv2_to_imgmsg(cv_image2, encoding="bgr8")
     ar_image_pub.publish(image_message)
     pose = PoseStamped()
-    pose.pose.position.x = ar_tag_pose.markers[0].pose.pose.position.x + (1.2 if counter>=2 and counter<7 else 0)
-    pose.pose.position.y = ar_tag_pose.markers[0].pose.pose.position.y + (((ar_tag_pose.markers[0].pose.pose.position.y/abs(ar_tag_pose.markers[0].pose.pose.position.y))  * 1.2) if counter<=1 or counter>=7 else 0)
+    pose.pose.position.x = ar_tag_pose.markers[0].pose.pose.position.x + (1.1 if counter>=2 and counter<7 else 0)
+    pose.pose.position.y = ar_tag_pose.markers[0].pose.pose.position.y + (((ar_tag_pose.markers[0].pose.pose.position.y/abs(ar_tag_pose.markers[0].pose.pose.position.y))  * 1.1) if counter<=1 or counter>=7 else 0)
     pose.pose.position.z = ar_tag_pose.markers[0].pose.pose.position.z + 2.5
     pose.pose.orientation.w = dronePos.pose.orientation.w
     pose.pose.orientation.z = dronePos.pose.orientation.z
     print(pose)
     pub.publish(pose)
-    rospy.sleep(2.5)
+    rospy.sleep(3.0)
     ballRelease.publish(0.0)
     rospy.sleep(1)
     print("KIOS UCY DONE!!!")
@@ -117,7 +117,7 @@ def listener():
                     pose.pose.orientation.z = dronePos.pose.orientation.z
                     pub.publish(pose)
                     print('CHANGING POSITION')
-                    rospy.sleep(3)
+                    rospy.sleep(1.5)
                     counter+=1
                 elif counter==1:
                     pose = PoseStamped()
@@ -128,7 +128,7 @@ def listener():
                     pose.pose.orientation.z = dronePos.pose.orientation.z
                     pub.publish(pose)
                     print('CHANGING POSITION')
-                    rospy.sleep(3)
+                    rospy.sleep(1.5)
                     counter+=1
                 elif counter==2:
                     pose = PoseStamped()
@@ -139,7 +139,7 @@ def listener():
                     pose.pose.orientation.z = 0.0
                     pub.publish(pose)
                     print('CHANGING POSITION')
-                    rospy.sleep(3)
+                    rospy.sleep(1.5)
                     counter+=1
                 elif counter==3:
                     pose = PoseStamped()
@@ -150,7 +150,7 @@ def listener():
                     pose.pose.orientation.z = dronePos.pose.orientation.z
                     pub.publish(pose)
                     print('CHANGING POSITION')
-                    rospy.sleep(3)
+                    rospy.sleep(1.5)
                     counter+=1
                 elif counter==4:
                     pose = PoseStamped()
@@ -161,7 +161,7 @@ def listener():
                     pose.pose.orientation.z = dronePos.pose.orientation.z
                     pub.publish(pose)
                     print('CHANGING POSITION')
-                    rospy.sleep(3)
+                    rospy.sleep(1.5)
                     counter+=1
                 elif counter==5:
                     pose = PoseStamped()
@@ -172,7 +172,7 @@ def listener():
                     pose.pose.orientation.z = dronePos.pose.orientation.z
                     pub.publish(pose)
                     print('CHANGING POSITION')
-                    rospy.sleep(3)
+                    rospy.sleep(1.5)
                     counter+=1
                 elif counter==6:
                     pose = PoseStamped()
@@ -183,7 +183,7 @@ def listener():
                     pose.pose.orientation.z = dronePos.pose.orientation.z
                     pub.publish(pose)
                     print('CHANGING POSITION')
-                    rospy.sleep(3)
+                    rospy.sleep(1.5)
                     counter+=1
                 elif counter==7:
                     pose = PoseStamped()
@@ -194,7 +194,7 @@ def listener():
                     pose.pose.orientation.z = -1.57079632679
                     pub.publish(pose)
                     print('CHANGING POSITION')
-                    rospy.sleep(3)
+                    rospy.sleep(1.5)
                     counter+=1
                 elif counter==8:
                     pose = PoseStamped()
@@ -205,7 +205,7 @@ def listener():
                     pose.pose.orientation.z = dronePos.pose.orientation.z
                     pub.publish(pose)
                     print('CHANGING POSITION')
-                    rospy.sleep(3)
+                    rospy.sleep(1.5)
                     counter+=1
                 elif counter==9:
                     pose = PoseStamped()
@@ -216,7 +216,7 @@ def listener():
                     pose.pose.orientation.z = dronePos.pose.orientation.z
                     pub.publish(pose)
                     print('CHANGING POSITION')
-                    rospy.sleep(3)
+                    rospy.sleep(1.5)
                     counter+=1
                 elif counter==10:
                     print("TAG NOT FOUND!!! I GIVE UP!!!")
@@ -227,7 +227,7 @@ def listener():
                     pose.pose.orientation.w = 0.0
                     pose.pose.orientation.z = 0.0
                     pub.publish(pose)
-                    rospy.sleep(3)
+                    rospy.sleep(1.5)
                     ballRelease.publish(0.0)
                     exit(0)
         except Exception as e:
