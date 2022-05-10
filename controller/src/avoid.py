@@ -79,9 +79,9 @@ def main():
     	    	cosy_cosp = 1 - 2 * (data.pose.orientation.y * data.pose.orientation.y + data.pose.orientation.z * data.pose.orientation.z);
     	    	yaw = math.atan2(siny_cosp, cosy_cosp);
 		'''
-
+            print(1/rateHz * (vel.linear.x))
             data.pose.position.x = dronePos.pose.position.x + \
-                1/rateHz * (vel.linear.x)  # * math.cos(yaw))
+                1/rateHz * (vel.linear.x*2)  # * math.cos(yaw))
             data.pose.position.y = dronePos.pose.position.y + \
                 1/rateHz * (vel.linear.y)  # * math.sin(yaw))
             data.pose.position.z = dronePos.pose.position.z + 1/rateHz * vel.linear.z
