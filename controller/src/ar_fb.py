@@ -64,9 +64,9 @@ def throw_ball(ar_tag_pose):
     pose.pose.position.x = ar_tag_pose.markers[0].pose.pose.position.x - (0.85 if (counter>=3 and counter<=7) else 0)
     pose.pose.position.y = ar_tag_pose.markers[0].pose.pose.position.y - (((ar_tag_pose.markers[0].pose.pose.position.y/abs(ar_tag_pose.markers[0].pose.pose.position.y))  * 0.95) if (counter<=2 or counter>=8) else 0)
     if pose.pose.position.y < -7:
-        pose.pose.position.y = -6.9
+        pose.pose.position.y = -6.8
     elif pose.pose.position.y > 7:
-        pose.pose.position.y = 6.9
+        pose.pose.position.y = 6.8
     pose.pose.position.z = ar_tag_pose.markers[0].pose.pose.position.z + 1.0
     pose.pose.orientation.w = dronePos.pose.orientation.w
     pose.pose.orientation.z = dronePos.pose.orientation.z
